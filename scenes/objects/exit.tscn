@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dg3sjg37jqwcf"]
+
+[ext_resource type="Texture2D" uid="uid://be22u5h4f8biq" path="res://assets/sprites/obstacles.png" id="1_ilbk5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pm745"]
+size = Vector2(32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j5c87"]
+atlas = ExtResource("1_ilbk5")
+region = Rect2(0, 32, 32, 32)
+
+[node name="Exit" type="StaticBody2D"]
+collision_layer = 256
+collision_mask = 0
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_pm745")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_j5c87")

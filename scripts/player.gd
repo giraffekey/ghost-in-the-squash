@@ -43,6 +43,9 @@ func _process(delta: float) -> void:
 				$Animation.play("pumpkin_die")
 				return
 
+			if not $ExitTimer.is_stopped():
+				return
+
 			var is_running = Input.is_action_pressed("run")
 
 			if Input.is_action_pressed("left"):
@@ -136,6 +139,14 @@ func _process(delta: float) -> void:
 					elif collider.get_collision_layer_value(5):
 						velocity = Vector2()
 						$DieTimer.start()
+					elif collider.get_collision_layer_value(9):
+						set_collision_mask_value(9, false)
+						if position.x > collider.position.x:
+							position = collider.position + Vector2(16, 8)
+						else:
+							position = collider.position + Vector2(-16, 8)
+						create_tween().tween_property(self, "position:x", collider.position.x, $ExitTimer.wait_time)
+						$ExitTimer.start()
 
 			if position.y > $Camera.limit_bottom + 8:
 				velocity = Vector2()
@@ -144,32 +155,32 @@ func _process(delta: float) -> void:
 
 			$Animation.play("pumpkin_idle")
 		State.GHOST:
-			if not $PossessionTimer.is_stopped():
-				$Animation.play("ghost_possess")
-				return
-
 			if not $DieTimer.is_stopped():
 				$Animation.play("ghost_die")
 				return
 
-			if Input.is_action_just_pressed("left"):
+			if not $PossessionTimer.is_stopped():
+				$Animation.play("ghost_possess")
+				return
+
+			if Input.is_action_pressed("left"):
 				direction = Direction.LEFT
 				$Sprite.flip_h = true
 				$Sprite.rotation = 0
 
-			if Input.is_action_just_pressed("right"):
+			if Input.is_action_pressed("right"):
 				direction = Direction.RIGHT
 				$Sprite.flip_h = false
 				$Sprite.rotation = 0
 
-			if Input.is_action_just_pressed("up"):
+			if Input.is_action_pressed("up"):
 				direction = Direction.UP
 				if $Sprite.flip_h:
 					$Sprite.rotation = deg_to_rad(90)
 				else:
 					$Sprite.rotation = deg_to_rad(-90)
 
-			if Input.is_action_just_pressed("down"):
+			if Input.is_action_pressed("down"):
 				direction = Direction.DOWN
 				if $Sprite.flip_h:
 					$Sprite.rotation = deg_to_rad(-90)
@@ -239,10 +250,13 @@ func _on_die_timer_timeout() -> void:
 			if position.y >= $Camera.limit_bottom - 8:
 				reset_at_checkpoint()
 			else:
+				if $Sprite.flip_h:
+					direction = Direction.LEFT
+				else:
+					direction = Direction.RIGHT
+
 				state = State.GHOST
-				direction = Direction.RIGHT
 				energy = GHOST_ENERGY
-				$Sprite.flip_h = false
 				$Sprite.offset.y = 0
 				set_collision_layer_value(1, false)
 				set_collision_layer_value(2, true)
@@ -253,6 +267,7 @@ func _on_die_timer_timeout() -> void:
 				set_collision_mask_value(5, false)
 				set_collision_mask_value(7, true)
 				set_collision_mask_value(8, true)
+				set_collision_mask_value(9, false)
 				GroundLayer.modulate.a = 0.5
 				MistLayer.modulate.a = 1.0
 				EnergyBar.visible = true
@@ -274,11 +289,15 @@ func _on_possession_timer_timeout() -> void:
 	set_collision_mask_value(5, true)
 	set_collision_mask_value(7, false)
 	set_collision_mask_value(8, false)
+	set_collision_mask_value(9, true)
 	position = pumpkin_position
 	visible = true
 	GroundLayer.modulate.a = 1.0
 	MistLayer.modulate.a = 0.5
 	EnergyBar.visible = false
+
+func _on_exit_timer_timeout() -> void:
+	get_tree().change_scene_to_file("res://scenes/levels/end.tscn")
 
 func reset_at_checkpoint() -> void:
 	var pumpkin_scene = load("res://scenes/objects/pumpkin.tscn")
