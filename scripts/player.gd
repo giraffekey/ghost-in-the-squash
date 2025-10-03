@@ -12,6 +12,10 @@ const MAX_JUMP_HEIGHT: float = 64
 const GHOST_SPEED: float = 256
 const GHOST_ENERGY: float = 640
 
+@onready var GroundLayer = $"../../Tiles/GroundLayer"
+@onready var MistLayer = $"../../Tiles/MistLayer"
+@onready var Obstacles = $"../../Obstacles"
+
 enum State {PUMPKIN, GHOST}
 enum Direction {LEFT, RIGHT, UP, DOWN}
 
@@ -23,11 +27,13 @@ var jump_dx: float = 0
 var is_falling: bool = false
 var energy: float = 0
 var time: float = 0
+var checkpoint: Vector2 = Vector2()
 var pumpkin_position: Vector2 = Vector2()
 
 func _ready() -> void:
-	state = State.PUMPKIN
-	$Sprite.frame = 0
+	checkpoint = position
+	reset_at_checkpoint()
+	MistLayer.modulate.a = 0.5
 
 func _process(delta: float) -> void:
 	match state:
@@ -126,6 +132,11 @@ func _process(delta: float) -> void:
 					velocity = Vector2()
 					$DieTimer.start()
 
+			if position.y > $Camera.limit_bottom + 8:
+				velocity = Vector2()
+				position.y = $Camera.limit_bottom - 8
+				$DieTimer.start()
+
 			$Animation.play("pumpkin_idle")
 		State.GHOST:
 			if not $PossessionTimer.is_stopped():
@@ -176,6 +187,7 @@ func _process(delta: float) -> void:
 				var collider = collision.get_collider()
 				if not collider is TileMapLayer and collider.get_collision_layer_value(7):
 					collider.possessed = true
+					checkpoint = collider.position
 					pumpkin_position = collider.position
 
 					match direction:
@@ -212,23 +224,28 @@ func _on_hang_timer_timeout() -> void:
 func _on_die_timer_timeout() -> void:
 	match state:
 		State.PUMPKIN:
-			state = State.GHOST
-			direction = Direction.RIGHT
-			energy = GHOST_ENERGY
-			$Sprite.flip_h = false
-			$Sprite.offset.y = 0
-			set_collision_layer_value(1, false)
-			set_collision_layer_value(2, true)
-			set_collision_layer_value(3, false)
-			set_collision_layer_value(4, true)
-			set_collision_layer_value(7, true)
-			set_collision_mask_value(1, false)
-			set_collision_mask_value(2, true)
-			set_collision_mask_value(3, false)
-			set_collision_mask_value(4, true)
-			set_collision_mask_value(7, true)
+			if position.y >= $Camera.limit_bottom - 8:
+				reset_at_checkpoint()
+			else:
+				state = State.GHOST
+				direction = Direction.RIGHT
+				energy = GHOST_ENERGY
+				$Sprite.flip_h = false
+				$Sprite.offset.y = 0
+				set_collision_layer_value(1, false)
+				set_collision_layer_value(2, true)
+				set_collision_layer_value(3, false)
+				set_collision_layer_value(4, true)
+				set_collision_layer_value(7, true)
+				set_collision_mask_value(1, false)
+				set_collision_mask_value(2, true)
+				set_collision_mask_value(3, false)
+				set_collision_mask_value(4, true)
+				set_collision_mask_value(7, true)
+				GroundLayer.modulate.a = 0.5
+				MistLayer.modulate.a = 1.0
 		State.GHOST:
-			get_tree().reload_current_scene()
+			reset_at_checkpoint()
 
 func _on_possession_timer_timeout() -> void:
 	state = State.PUMPKIN
@@ -245,3 +262,18 @@ func _on_possession_timer_timeout() -> void:
 	set_collision_mask_value(4, false)
 	set_collision_mask_value(7, false)
 	position = pumpkin_position
+	visible = true
+	GroundLayer.modulate.a = 1.0
+	MistLayer.modulate.a = 0.5
+
+func reset_at_checkpoint() -> void:
+	var pumpkin_scene = load("res://scenes/objects/pumpkin.tscn")
+	var pumpkin = pumpkin_scene.instantiate()
+	pumpkin.position = checkpoint
+	pumpkin.possessed = true
+	Obstacles.add_child(pumpkin)
+
+	visible = false
+	position = checkpoint
+	pumpkin_position = checkpoint
+	$PossessionTimer.start()
