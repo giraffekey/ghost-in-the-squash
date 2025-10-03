@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://c4eda87348teu"]
+
+[ext_resource type="Texture2D" uid="uid://be22u5h4f8biq" path="res://assets/sprites/obstacles.png" id="1_jvh0g"]
+[ext_resource type="Script" uid="uid://co1nilbdkuhp6" path="res://scripts/crystal.gd" id="1_ldj1t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jvh0g"]
+size = Vector2(12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ldj1t"]
+atlas = ExtResource("1_jvh0g")
+region = Rect2(0, 16, 32, 16)
+
+[node name="Crystal" type="StaticBody2D"]
+collision_layer = 128
+collision_mask = 128
+script = ExtResource("1_ldj1t")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jvh0g")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_ldj1t")
+hframes = 2
+
+[node name="UseTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="UseTimer" to="." method="_on_use_timer_timeout"]

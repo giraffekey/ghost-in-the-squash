@@ -72,6 +72,7 @@ run={
 2d_physics/layer_5="physical_enemy"
 2d_physics/layer_6="corporeal_enemy"
 2d_physics/layer_7="pumpkin"
+2d_physics/layer_8="crystal"
 
 [rendering]
 

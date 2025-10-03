@@ -7,7 +7,7 @@ size = Vector2(16, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dh74s"]
 atlas = ExtResource("1_htn6p")
-region = Rect2(0, 16, 16, 16)
+region = Rect2(0, 32, 16, 16)
 
 [node name="Spike" type="StaticBody2D"]
 collision_layer = 4

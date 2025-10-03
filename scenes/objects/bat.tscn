@@ -8,7 +8,7 @@ size = Vector2(16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wv483"]
 atlas = ExtResource("2_dfh1d")
-region = Rect2(0, 32, 80, 16)
+region = Rect2(0, 48, 80, 16)
 
 [sub_resource type="Animation" id="Animation_tb3ca"]
 resource_name = "fly"

@@ -129,12 +129,13 @@ func _process(delta: float) -> void:
 			for i in get_slide_collision_count():
 				var collision = get_slide_collision(i)
 				var collider = collision.get_collider()
-				if not collider is TileMapLayer and collider.get_collision_layer_value(3) and collision.get_normal() == Vector2(0, -1):
-					velocity = Vector2()
-					$DieTimer.start()
-				elif not collider is TileMapLayer and collider.get_collision_layer_value(5):
-					velocity = Vector2()
-					$DieTimer.start()
+				if not collider is TileMapLayer:
+					if collider.get_collision_layer_value(3) and collision.get_normal() == Vector2(0, -1):
+						velocity = Vector2()
+						$DieTimer.start()
+					elif collider.get_collision_layer_value(5):
+						velocity = Vector2()
+						$DieTimer.start()
 
 			if position.y > $Camera.limit_bottom + 8:
 				velocity = Vector2()
@@ -189,28 +190,33 @@ func _process(delta: float) -> void:
 			var collision = move_and_collide(velocity * delta)
 			if collision:
 				var collider = collision.get_collider()
-				if not collider is TileMapLayer and collider.get_collision_layer_value(7):
-					collider.possessed = true
-					checkpoint = collider.position
-					pumpkin_position = collider.position
-
-					match direction:
-						Direction.LEFT:
-							position = collider.position + Vector2(16, 0)
-						Direction.RIGHT:
-							position = collider.position + Vector2(-16, 0)
-						Direction.UP:
-							position = collider.position + Vector2(0, 16)
-						Direction.DOWN:
-							position = collider.position + Vector2(0, -16)
-
-					velocity = Vector2()
-					set_collision_layer_value(7, false)
-					set_collision_mask_value(7, false)
-					$PossessionTimer.start()
-				else:
+				if collider is TileMapLayer:
 					velocity = Vector2()
 					$DieTimer.start()
+				else:
+					if collider.get_collision_layer_value(7):
+						collider.possessed = true
+						checkpoint = collider.position
+						pumpkin_position = collider.position
+
+						match direction:
+							Direction.LEFT:
+								position = collider.position + Vector2(16, 0)
+							Direction.RIGHT:
+								position = collider.position + Vector2(-16, 0)
+							Direction.UP:
+								position = collider.position + Vector2(0, 16)
+							Direction.DOWN:
+								position = collider.position + Vector2(0, -16)
+
+						velocity = Vector2()
+						set_collision_layer_value(7, false)
+						set_collision_mask_value(7, false)
+						$PossessionTimer.start()
+					elif collider.get_collision_layer_value(8) and collider.is_unused():
+						energy = GHOST_ENERGY
+						last_position = position
+						collider.use()
 
 			energy -= position.distance_to(last_position)
 			EnergyBar.get_node("Top").size.x = ceil(energy / 16)
@@ -240,16 +246,13 @@ func _on_die_timer_timeout() -> void:
 				$Sprite.offset.y = 0
 				set_collision_layer_value(1, false)
 				set_collision_layer_value(2, true)
-				set_collision_layer_value(3, false)
-				set_collision_layer_value(4, true)
-				set_collision_layer_value(5, false)
-				set_collision_layer_value(7, true)
 				set_collision_mask_value(1, false)
 				set_collision_mask_value(2, true)
 				set_collision_mask_value(3, false)
 				set_collision_mask_value(4, true)
 				set_collision_mask_value(5, false)
 				set_collision_mask_value(7, true)
+				set_collision_mask_value(8, true)
 				GroundLayer.modulate.a = 0.5
 				MistLayer.modulate.a = 1.0
 				EnergyBar.visible = true
@@ -264,16 +267,13 @@ func _on_possession_timer_timeout() -> void:
 	$Sprite.frame = 0
 	set_collision_layer_value(1, true)
 	set_collision_layer_value(2, false)
-	set_collision_layer_value(3, true)
-	set_collision_layer_value(4, false)
-	set_collision_layer_value(5, true)
-	set_collision_layer_value(7, false)
 	set_collision_mask_value(1, true)
 	set_collision_mask_value(2, false)
 	set_collision_mask_value(3, true)
 	set_collision_mask_value(4, false)
 	set_collision_mask_value(5, true)
 	set_collision_mask_value(7, false)
+	set_collision_mask_value(8, false)
 	position = pumpkin_position
 	visible = true
 	GroundLayer.modulate.a = 1.0

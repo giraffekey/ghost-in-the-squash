@@ -14,6 +14,10 @@ func _ready() -> void:
 				var pumpkin = load("res://scenes/objects/pumpkin.tscn").instantiate()
 				pumpkin.position = cell as Vector2 * 16 + Vector2(8, 8)
 				$Obstacles.add_child(pumpkin)
+			Vector2i(2, 0):
+				var crystal = load("res://scenes/objects/crystal.tscn").instantiate()
+				crystal.position = cell as Vector2 * 16 + Vector2(8, 8)
+				$Obstacles.add_child(crystal)
 			Vector2i(0, 1):
 				var spike = load("res://scenes/objects/spike.tscn").instantiate()
 				spike.position = cell as Vector2 * 16 + Vector2(8, 8)

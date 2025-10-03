@@ -50,6 +50,16 @@ func follow_path() -> void:
 				direction = Direction.UP
 			elif direction == Direction.DOWN:
 				direction = Direction.LEFT
+		Vector2i(5, 0):
+			match direction:
+				Direction.LEFT:
+					direction = Direction.RIGHT
+				Direction.RIGHT:
+					direction = Direction.LEFT
+				Direction.UP:
+					direction = Direction.DOWN
+				Direction.DOWN:
+					direction = Direction.UP
 
 	match direction:
 		Direction.LEFT:
