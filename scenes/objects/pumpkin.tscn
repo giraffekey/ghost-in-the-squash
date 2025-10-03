@@ -1,0 +1,85 @@
+[gd_scene load_steps=9 format=3 uid="uid://bse2dxuldo3ag"]
+
+[ext_resource type="Texture2D" uid="uid://be22u5h4f8biq" path="res://assets/sprites/obstacles.png" id="1_clvv2"]
+[ext_resource type="Script" uid="uid://0sy3wcbx2j1b" path="res://scripts/pumpkin.gd" id="1_x0h6s"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x0h6s"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e2ms4"]
+atlas = ExtResource("1_clvv2")
+region = Rect2(0, 0, 64, 16)
+
+[sub_resource type="Animation" id="Animation_x0h6s"]
+resource_name = "idle"
+length = 0.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_e2ms4"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_qin7m"]
+resource_name = "possessed"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qin7m"]
+_data = {
+&"RESET": SubResource("Animation_e2ms4"),
+&"idle": SubResource("Animation_x0h6s"),
+&"possessed": SubResource("Animation_qin7m")
+}
+
+[node name="Pumpkin" type="StaticBody2D"]
+collision_layer = 65
+collision_mask = 65
+script = ExtResource("1_x0h6s")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_x0h6s")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_e2ms4")
+hframes = 4
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_qin7m")
+}
+
+[connection signal="animation_finished" from="Animation" to="." method="_on_animation_finished"]

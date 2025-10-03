@@ -1,0 +1,157 @@
+[gd_scene load_steps=11 format=3 uid="uid://brmgahpi04rnl"]
+
+[ext_resource type="Script" uid="uid://btnl4ncpam6kq" path="res://scripts/player.gd" id="1_2147m"]
+[ext_resource type="Texture2D" uid="uid://c2t8gmttawqh8" path="res://assets/sprites/player.png" id="1_a8lix"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6m1ak"]
+size = Vector2(14, 14)
+
+[sub_resource type="Animation" id="Animation_h5uus"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_54rde"]
+resource_name = "ghost_move"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+
+[sub_resource type="Animation" id="Animation_2147m"]
+resource_name = "idle"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_q8hb4"]
+resource_name = "pumpkin_die"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.099999994, 0.19999999, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [8, 9, 10, 11]
+}
+
+[sub_resource type="Animation" id="Animation_ksjmp"]
+resource_name = "ghost_die"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.099999994, 0.19999999, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [12, 13, 14, 15]
+}
+
+[sub_resource type="Animation" id="Animation_2rlf8"]
+resource_name = "ghost_possess"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.099999994, 0.19999999, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [16, 17, 18, 19]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_54rde"]
+_data = {
+&"RESET": SubResource("Animation_h5uus"),
+&"ghost_die": SubResource("Animation_ksjmp"),
+&"ghost_move": SubResource("Animation_54rde"),
+&"ghost_possess": SubResource("Animation_2rlf8"),
+&"pumpkin_die": SubResource("Animation_q8hb4"),
+&"pumpkin_idle": SubResource("Animation_2147m")
+}
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 5
+collision_mask = 5
+script = ExtResource("1_2147m")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6m1ak")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_a8lix")
+hframes = 4
+vframes = 5
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_54rde")
+}
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="JumpTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="HangTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="DieTimer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
+
+[node name="PossessionTimer" type="Timer" parent="."]
+wait_time = 0.4
+one_shot = true
+
+[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timer_timeout"]
+[connection signal="timeout" from="HangTimer" to="." method="_on_hang_timer_timeout"]
+[connection signal="timeout" from="DieTimer" to="." method="_on_die_timer_timeout"]
+[connection signal="timeout" from="PossessionTimer" to="." method="_on_possession_timer_timeout"]
