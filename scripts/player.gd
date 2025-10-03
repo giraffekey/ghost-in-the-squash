@@ -15,6 +15,7 @@ const GHOST_ENERGY: float = 480
 @onready var GroundLayer = $"../../Tiles/GroundLayer"
 @onready var MistLayer = $"../../Tiles/MistLayer"
 @onready var Obstacles = $"../../Obstacles"
+@onready var EnergyBar = $"../../UI/EnergyBar"
 
 enum State {PUMPKIN, GHOST}
 enum Direction {LEFT, RIGHT, UP, DOWN}
@@ -212,6 +213,8 @@ func _process(delta: float) -> void:
 					$DieTimer.start()
 
 			energy -= position.distance_to(last_position)
+			EnergyBar.get_node("Top").size.x = ceil(energy / 16)
+			EnergyBar.get_node("Bottom").size.x = ceil(energy / 16)
 			if energy <= 0:
 				velocity = Vector2()
 				$DieTimer.start()
@@ -249,6 +252,9 @@ func _on_die_timer_timeout() -> void:
 				set_collision_mask_value(7, true)
 				GroundLayer.modulate.a = 0.5
 				MistLayer.modulate.a = 1.0
+				EnergyBar.visible = true
+				EnergyBar.get_node("Top").size.x = 30
+				EnergyBar.get_node("Bottom").size.x = 30
 		State.GHOST:
 			reset_at_checkpoint()
 
@@ -272,6 +278,7 @@ func _on_possession_timer_timeout() -> void:
 	visible = true
 	GroundLayer.modulate.a = 1.0
 	MistLayer.modulate.a = 0.5
+	EnergyBar.visible = false
 
 func reset_at_checkpoint() -> void:
 	var pumpkin_scene = load("res://scenes/objects/pumpkin.tscn")
