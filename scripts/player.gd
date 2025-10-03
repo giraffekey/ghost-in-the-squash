@@ -10,7 +10,7 @@ const JUMP_ACCELERATION: float = 256
 const MIN_JUMP_HEIGHT: float = 48
 const MAX_JUMP_HEIGHT: float = 64
 const GHOST_SPEED: float = 256
-const GHOST_ENERGY: float = 640
+const GHOST_ENERGY: float = 480
 
 @onready var GroundLayer = $"../../Tiles/GroundLayer"
 @onready var MistLayer = $"../../Tiles/MistLayer"
@@ -131,6 +131,9 @@ func _process(delta: float) -> void:
 				if not collider is TileMapLayer and collider.get_collision_layer_value(3) and collision.get_normal() == Vector2(0, -1):
 					velocity = Vector2()
 					$DieTimer.start()
+				elif not collider is TileMapLayer and collider.get_collision_layer_value(5):
+					velocity = Vector2()
+					$DieTimer.start()
 
 			if position.y > $Camera.limit_bottom + 8:
 				velocity = Vector2()
@@ -236,11 +239,13 @@ func _on_die_timer_timeout() -> void:
 				set_collision_layer_value(2, true)
 				set_collision_layer_value(3, false)
 				set_collision_layer_value(4, true)
+				set_collision_layer_value(5, false)
 				set_collision_layer_value(7, true)
 				set_collision_mask_value(1, false)
 				set_collision_mask_value(2, true)
 				set_collision_mask_value(3, false)
 				set_collision_mask_value(4, true)
+				set_collision_mask_value(5, false)
 				set_collision_mask_value(7, true)
 				GroundLayer.modulate.a = 0.5
 				MistLayer.modulate.a = 1.0
@@ -255,11 +260,13 @@ func _on_possession_timer_timeout() -> void:
 	set_collision_layer_value(2, false)
 	set_collision_layer_value(3, true)
 	set_collision_layer_value(4, false)
+	set_collision_layer_value(5, true)
 	set_collision_layer_value(7, false)
 	set_collision_mask_value(1, true)
 	set_collision_mask_value(2, false)
 	set_collision_mask_value(3, true)
 	set_collision_mask_value(4, false)
+	set_collision_mask_value(5, true)
 	set_collision_mask_value(7, false)
 	position = pumpkin_position
 	visible = true
@@ -273,6 +280,7 @@ func reset_at_checkpoint() -> void:
 	pumpkin.possessed = true
 	Obstacles.add_child(pumpkin)
 
+	state = State.GHOST
 	visible = false
 	position = checkpoint
 	pumpkin_position = checkpoint

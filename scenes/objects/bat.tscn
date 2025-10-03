@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://ba5gjkoxrsyv7"]
+
+[ext_resource type="Script" uid="uid://dtwip71nvwyp4" path="res://scripts/bat.gd" id="1_8ouae"]
+[ext_resource type="Texture2D" uid="uid://be22u5h4f8biq" path="res://assets/sprites/obstacles.png" id="2_dfh1d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oyl2e"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wv483"]
+atlas = ExtResource("2_dfh1d")
+region = Rect2(0, 32, 80, 16)
+
+[sub_resource type="Animation" id="Animation_tb3ca"]
+resource_name = "fly"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+
+[sub_resource type="Animation" id="Animation_rqb0q"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lao7u"]
+_data = {
+&"RESET": SubResource("Animation_rqb0q"),
+&"fly": SubResource("Animation_tb3ca")
+}
+
+[node name="Bat" type="CharacterBody2D"]
+collision_layer = 16
+collision_mask = 16
+script = ExtResource("1_8ouae")
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_oyl2e")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_wv483")
+hframes = 5
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_lao7u")
+}
