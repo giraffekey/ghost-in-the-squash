@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+enum State {PUMPKIN, GHOST}
+enum Direction {LEFT, RIGHT, UP, DOWN}
+
 const MIN_WALK_SPEED: float = 64
 const MAX_WALK_SPEED: float = 128
 const MAX_RUN_SPEED: float = 256
@@ -16,9 +19,6 @@ const GHOST_ENERGY: float = 480
 @onready var MistLayer = $"../../Tiles/MistLayer"
 @onready var Obstacles = $"../../Obstacles"
 @onready var EnergyBar = $"../../UI/EnergyBar"
-
-enum State {PUMPKIN, GHOST}
-enum Direction {LEFT, RIGHT, UP, DOWN}
 
 var state: State = State.PUMPKIN
 var direction: Direction = Direction.RIGHT

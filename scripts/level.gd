@@ -1,6 +1,7 @@
 extends Node2D
 
 func _ready() -> void:
+	$Tiles/PathLayer.visible = false
 	for cell in $Tiles/ObjectLayer.get_used_cells():
 		match $Tiles/ObjectLayer.get_cell_atlas_coords(cell):
 			Vector2i(0, 0):
@@ -20,5 +21,6 @@ func _ready() -> void:
 			Vector2i(1, 1):
 				var bat = load("res://scenes/objects/bat.tscn").instantiate()
 				bat.position = cell as Vector2 * 16 + Vector2(8, 8)
+				bat.cell = cell
 				$Obstacles.add_child(bat)
 	$Tiles/ObjectLayer.queue_free()

@@ -63,3 +63,8 @@ hframes = 5
 libraries = {
 &"": SubResource("AnimationLibrary_lao7u")
 }
+
+[node name="MoveTimer" type="Timer" parent="."]
+wait_time = 0.4
+
+[connection signal="timeout" from="MoveTimer" to="." method="_on_move_timer_timeout"]
