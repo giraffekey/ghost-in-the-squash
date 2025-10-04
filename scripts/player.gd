@@ -217,7 +217,6 @@ func _process(delta: float) -> void:
 								position = collider.position + Vector2(0, -16)
 
 						velocity = Vector2()
-						set_collision_layer_value(7, false)
 						set_collision_mask_value(7, false)
 						$PossessionTimer.start()
 					elif collider.get_collision_layer_value(8) and collider.is_unused():
