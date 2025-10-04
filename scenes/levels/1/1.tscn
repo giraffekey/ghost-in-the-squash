@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://caj5tbh6rneoy"]
+[gd_scene load_steps=23 format=4 uid="uid://caj5tbh6rneoy"]
 
 [ext_resource type="Script" uid="uid://cr78hgub72trd" path="res://scripts/level.gd" id="1_kchu7"]
 [ext_resource type="Texture2D" uid="uid://dqa8vul3upam8" path="res://assets/sprites/background-1.png" id="2_kchu7"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://cq857lnqyqhy6" path="res://assets/sprites/background-3.png" id="4_xq0ru"]
 [ext_resource type="Texture2D" uid="uid://c8pn8muygrm2m" path="res://assets/sprites/background-4.png" id="5_hgu8c"]
 [ext_resource type="Texture2D" uid="uid://bxm86mapv7x27" path="res://assets/sprites/ui.png" id="8_q5bgg"]
+[ext_resource type="AudioStream" uid="uid://cwsu172xqkbvt" path="res://assets/audio/music.mp3" id="10_rlg85"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hgu8c"]
 texture = ExtResource("2_q5bgg")
@@ -148,6 +149,10 @@ sources/0 = SubResource("TileSetAtlasSource_xq0ru")
 atlas = ExtResource("8_q5bgg")
 region = Rect2(0, 0, 32, 16)
 
+[sub_resource type="AudioStreamPlaylist" id="AudioStreamPlaylist_xq0ru"]
+stream_count = 1
+stream_0 = ExtResource("10_rlg85")
+
 [node name="Level" type="Node2D"]
 script = ExtResource("1_kchu7")
 
@@ -243,3 +248,8 @@ offset_top = 8.0
 offset_right = 31.0
 offset_bottom = 10.0
 color = Color(0.96862745, 0.5882353, 0.09019608, 1)
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamPlaylist_xq0ru")
+
+[node name="SoundEffect" type="AudioStreamPlayer" parent="."]

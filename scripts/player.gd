@@ -15,10 +15,17 @@ const MAX_JUMP_HEIGHT: float = 64
 const GHOST_SPEED: float = 256
 const GHOST_ENERGY: float = 480
 
+const jump_sfx = preload("res://assets/audio/jump.wav")
+const possess_sfx = preload("res://assets/audio/possess.wav")
+const recharge_sfx = preload("res://assets/audio/recharge.wav")
+const death_sfx = preload("res://assets/audio/death.wav")
+const success_sfx = preload("res://assets/audio/success.wav")
+
 @onready var GroundLayer = $"../../Tiles/GroundLayer"
 @onready var MistLayer = $"../../Tiles/MistLayer"
 @onready var Obstacles = $"../../Obstacles"
 @onready var EnergyBar = $"../../UI/EnergyBar"
+@onready var SoundEffect = $"../../SoundEffect"
 
 var state: State = State.PUMPKIN
 var direction: Direction = Direction.RIGHT
@@ -86,6 +93,9 @@ func _process(delta: float) -> void:
 				velocity.y = -192
 				$JumpTimer.stop()
 
+				SoundEffect.stream = jump_sfx
+				SoundEffect.play()
+
 				if is_running:
 					jump_dx = MAX_RUN_SPEED
 				else:
@@ -145,6 +155,9 @@ func _process(delta: float) -> void:
 							position = collider.position + Vector2(-16, 8)
 						create_tween().tween_property(self, "position:x", collider.position.x, $ExitTimer.wait_time)
 						$ExitTimer.start()
+
+						SoundEffect.stream = success_sfx
+						SoundEffect.play()
 
 			if position.y > $Camera.limit_bottom + 8:
 				position.y = $Camera.limit_bottom - 8
@@ -219,10 +232,16 @@ func _process(delta: float) -> void:
 						velocity = Vector2()
 						set_collision_mask_value(7, false)
 						$PossessionTimer.start()
+
+						SoundEffect.stream = possess_sfx
+						SoundEffect.play()
 					elif collider.get_collision_layer_value(8) and collider.is_unused():
 						energy = GHOST_ENERGY
 						last_position = position
 						collider.use()
+
+						SoundEffect.stream = recharge_sfx
+						SoundEffect.play()
 
 			energy -= position.distance_to(last_position)
 			EnergyBar.get_node("Top").size.x = ceil(energy / 16)
@@ -301,6 +320,9 @@ func die() -> void:
 		velocity = Vector2()
 		$DieTimer.start()
 
+		SoundEffect.stream = death_sfx
+		SoundEffect.play()
+
 func reset_at_checkpoint() -> void:
 	var pumpkin_scene = load("res://scenes/objects/pumpkin.tscn")
 	var pumpkin = pumpkin_scene.instantiate()
@@ -313,3 +335,6 @@ func reset_at_checkpoint() -> void:
 	position = checkpoint
 	pumpkin_position = checkpoint
 	$PossessionTimer.start()
+
+	SoundEffect.stream = possess_sfx
+	SoundEffect.play()

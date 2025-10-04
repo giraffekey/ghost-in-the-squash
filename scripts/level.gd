@@ -32,6 +32,8 @@ func _ready() -> void:
 				$Obstacles.add_child(bat)
 	$Tiles/ObjectLayer.queue_free()
 
+	$Music.play()
+
 func _process(_delta: float) -> void:
 	var x = 1.0 - $Players/Player.position.x / 2880
 	$Background/Background1a.position.x = x * 640 - 320
