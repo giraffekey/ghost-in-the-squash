@@ -1,22 +1,38 @@
 extends CharacterBody2D
 
-enum Direction {LEFT, RIGHT, UP, DOWN}
+enum Direction {NONE, LEFT, RIGHT, UP, DOWN}
 
 @onready var PathLayer = $"../../Tiles/PathLayer"
 
-var cell: Vector2i = Vector2i()
-var direction: Direction = Direction.LEFT
+var direction: Direction = Direction.NONE
 
 func _ready() -> void:
-	follow_path()
+	pass
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	$Animation.play("fly")
 
-func _on_move_timer_timeout() -> void:
 	follow_path()
+	var collision = move_and_collide(velocity * delta)
+	if collision:
+		var collider = collision.get_collider()
+		if collider is CharacterBody2D and collider.get_collision_layer_value(10):
+			collider.die()
 
 func follow_path() -> void:
+	var cell
+	match direction:
+		Direction.NONE:
+			cell = PathLayer.local_to_map(position)
+		Direction.LEFT:
+			cell = PathLayer.local_to_map(position + Vector2(8, 0))
+		Direction.RIGHT:
+			cell = PathLayer.local_to_map(position + Vector2(-8, 0))
+		Direction.UP:
+			cell = PathLayer.local_to_map(position + Vector2(0, 8))
+		Direction.DOWN:
+			cell = PathLayer.local_to_map(position + Vector2(0, -8))
+
 	match PathLayer.get_cell_atlas_coords(cell):
 		Vector2i(0, 0):
 			pass
@@ -62,19 +78,15 @@ func follow_path() -> void:
 					direction = Direction.UP
 
 	match direction:
+		Direction.NONE:
+			velocity = Vector2()
 		Direction.LEFT:
-			cell.x -= 1
 			$Sprite.flip_h = true
-			create_tween().tween_property(self, "position:x", position.x - 16, $MoveTimer.wait_time)
+			velocity = Vector2(-80, 0)
 		Direction.RIGHT:
-			cell.x += 1
 			$Sprite.flip_h = false
-			create_tween().tween_property(self, "position:x", position.x + 16, $MoveTimer.wait_time)
+			velocity = Vector2(80, 0)
 		Direction.UP:
-			cell.y -= 1
-			create_tween().tween_property(self, "position:y", position.y - 16, $MoveTimer.wait_time)
+			velocity = Vector2(0, -80)
 		Direction.DOWN:
-			cell.y += 1
-			create_tween().tween_property(self, "position:y", position.y + 16, $MoveTimer.wait_time)
-
-	$MoveTimer.start()
+			velocity = Vector2(0, 80)

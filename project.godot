@@ -74,6 +74,7 @@ run={
 2d_physics/layer_7="pumpkin"
 2d_physics/layer_8="crystal"
 2d_physics/layer_9="exit"
+2d_physics/layer_10="player"
 
 [rendering]
 

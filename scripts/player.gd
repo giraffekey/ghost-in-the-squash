@@ -134,11 +134,9 @@ func _process(delta: float) -> void:
 				var collider = collision.get_collider()
 				if not collider is TileMapLayer:
 					if collider.get_collision_layer_value(3) and collision.get_normal() == Vector2(0, -1):
-						velocity = Vector2()
-						$DieTimer.start()
+						die()
 					elif collider.get_collision_layer_value(5):
-						velocity = Vector2()
-						$DieTimer.start()
+						die()
 					elif collider.get_collision_layer_value(9):
 						set_collision_mask_value(9, false)
 						if position.x > collider.position.x:
@@ -149,9 +147,8 @@ func _process(delta: float) -> void:
 						$ExitTimer.start()
 
 			if position.y > $Camera.limit_bottom + 8:
-				velocity = Vector2()
 				position.y = $Camera.limit_bottom - 8
-				$DieTimer.start()
+				die()
 
 			$Animation.play("pumpkin_idle")
 		State.GHOST:
@@ -202,8 +199,7 @@ func _process(delta: float) -> void:
 			if collision:
 				var collider = collision.get_collider()
 				if collider is TileMapLayer:
-					velocity = Vector2()
-					$DieTimer.start()
+					die()
 				else:
 					if collider.get_collision_layer_value(7):
 						collider.possessed = true
@@ -260,6 +256,7 @@ func _on_die_timer_timeout() -> void:
 				$Sprite.offset.y = 0
 				set_collision_layer_value(1, false)
 				set_collision_layer_value(2, true)
+				set_collision_layer_value(10, false)
 				set_collision_mask_value(1, false)
 				set_collision_mask_value(2, true)
 				set_collision_mask_value(3, false)
@@ -282,6 +279,7 @@ func _on_possession_timer_timeout() -> void:
 	$Sprite.frame = 0
 	set_collision_layer_value(1, true)
 	set_collision_layer_value(2, false)
+	set_collision_layer_value(10, true)
 	set_collision_mask_value(1, true)
 	set_collision_mask_value(2, false)
 	set_collision_mask_value(3, true)
@@ -298,6 +296,11 @@ func _on_possession_timer_timeout() -> void:
 
 func _on_exit_timer_timeout() -> void:
 	get_tree().change_scene_to_file("res://scenes/levels/end.tscn")
+
+func die() -> void:
+	if $DieTimer.is_stopped():
+		velocity = Vector2()
+		$DieTimer.start()
 
 func reset_at_checkpoint() -> void:
 	var pumpkin_scene = load("res://scenes/objects/pumpkin.tscn")
