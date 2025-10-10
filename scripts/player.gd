@@ -147,6 +147,7 @@ func _process(delta: float) -> void:
 					if collider.get_collision_layer_value(3) and collision.get_normal() == Vector2(0, -1):
 						die()
 					elif collider.get_collision_layer_value(5):
+						collider.move_through_player()
 						die()
 					elif collider.get_collision_layer_value(9):
 						set_collision_mask_value(9, false)

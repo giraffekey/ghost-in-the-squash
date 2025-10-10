@@ -17,6 +17,7 @@ func _process(delta: float) -> void:
 	if collision:
 		var collider = collision.get_collider()
 		if collider is CharacterBody2D and collider.get_collision_layer_value(10):
+			move_through_player()
 			collider.die()
 
 func follow_path() -> void:
@@ -90,3 +91,8 @@ func follow_path() -> void:
 			velocity = Vector2(0, -80)
 		Direction.DOWN:
 			velocity = Vector2(0, 80)
+
+func move_through_player() -> void:
+	set_collision_mask_value(10, false)
+	await get_tree().create_timer(0.4).timeout
+	set_collision_mask_value(10, true)
