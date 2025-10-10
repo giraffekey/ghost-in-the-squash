@@ -271,6 +271,7 @@ func _on_die_timer_timeout() -> void:
 
 				state = State.GHOST
 				energy = GHOST_ENERGY
+				$Hitbox.shape.size = Vector2(12, 12)
 				$Sprite.offset.y = 0
 				set_collision_layer_value(1, false)
 				set_collision_layer_value(2, true)
@@ -293,6 +294,7 @@ func _on_die_timer_timeout() -> void:
 
 func _on_possession_timer_timeout() -> void:
 	state = State.PUMPKIN
+	$Hitbox.shape.size = Vector2(14, 14)
 	$Sprite.rotation = 0
 	$Sprite.frame = 0
 	set_collision_layer_value(1, true)
