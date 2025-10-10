@@ -26,6 +26,7 @@ const success_sfx = preload("res://assets/audio/success.wav")
 @onready var Obstacles = $"../../Obstacles"
 @onready var EnergyBar = $"../../UI/EnergyBar"
 @onready var SoundEffect = $"../../SoundEffect"
+@onready var Scene = $"../../.."
 
 var state: State = State.PUMPKIN
 var direction: Direction = Direction.RIGHT
@@ -315,7 +316,7 @@ func _on_possession_timer_timeout() -> void:
 	EnergyBar.visible = false
 
 func _on_exit_timer_timeout() -> void:
-	get_tree().change_scene_to_file("res://scenes/levels/end.tscn")
+	Scene.change_scene_to_file("res://scenes/levels/end.tscn")
 
 func die() -> void:
 	if $DieTimer.is_stopped():

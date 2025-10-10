@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Ghost in the Squash"
-run/main_scene="uid://caj5tbh6rneoy"
+run/main_scene="uid://l4f1swy8hbmy"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 

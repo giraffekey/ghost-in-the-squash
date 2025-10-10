@@ -1,4 +1,4 @@
-extends SubViewport
+extends Node2D
 
 func _ready() -> void:
 	$Tiles/PathLayer.visible = false
