@@ -129,7 +129,7 @@ func _process(delta: float) -> void:
 				is_jumping = false
 				is_falling = false
 				time += 4 * delta
-				$Sprite.offset.y = cos(time) * 4 - 4
+				$Sprite.offset.y = int(cos(time) * 4 - 5)
 			else:
 				time = 0
 				$Sprite.offset.y = 0

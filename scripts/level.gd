@@ -1,4 +1,4 @@
-extends Node2D
+extends SubViewport
 
 func _ready() -> void:
 	$Tiles/PathLayer.visible = false
@@ -35,7 +35,7 @@ func _ready() -> void:
 	$Music.play()
 
 func _process(_delta: float) -> void:
-	var x = 1.0 - $Players/Player.position.x / 2880
+	var x = 1.0 - $Players/Player.position.x / 2880 / 2
 	$Background/Background1a.position.x = x * 640 - 320
 	$Background/Background1b.position.x = x * 640 + 320
 	$Background/Background2a.position.x = fmod(x * 640 * 2, 640) - 320
@@ -45,7 +45,7 @@ func _process(_delta: float) -> void:
 	$Background/Background4a.position.x = fmod(x * 640 * 4, 640) - 320
 	$Background/Background4b.position.x = fmod(x * 640 * 4, 640) + 320
 
-	var y = 60 + (1.0 - $Players/Player.position.y / 480) * 120
+	var y = 60 + (1.0 - $Players/Player.position.y / 480) * 120 / 2
 	$Background/Background1a.position.y = y
 	$Background/Background1b.position.y = y
 	$Background/Background2a.position.y = y

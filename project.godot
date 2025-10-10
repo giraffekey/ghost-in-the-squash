@@ -19,9 +19,6 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=640
 window/size/viewport_height=480
-window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
-window/stretch/scale=2.0
 window/stretch/scale_mode="integer"
 
 [input]
@@ -65,12 +62,12 @@ run={
 
 [layer_names]
 
-2d_physics/layer_1="physical_wall"
-2d_physics/layer_2="corporeal_wall"
-2d_physics/layer_3="physical_hazard"
-2d_physics/layer_4="corporeal_hazard"
-2d_physics/layer_5="physical_enemy"
-2d_physics/layer_6="corporeal_enemy"
+2d_physics/layer_1="corporeal_wall"
+2d_physics/layer_2="incorporeal_wall"
+2d_physics/layer_3="corporeal_hazard"
+2d_physics/layer_4="incorporeal_hazard"
+2d_physics/layer_5="corporeal_enemy"
+2d_physics/layer_6="incorporeal_enemy"
 2d_physics/layer_7="pumpkin"
 2d_physics/layer_8="crystal"
 2d_physics/layer_9="exit"
@@ -81,3 +78,4 @@ run={
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.18039216, 0.13333334, 0.18431373, 1)
