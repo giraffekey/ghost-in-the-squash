@@ -13,4 +13,4 @@ func update() -> void:
 	var s = max(min(get_window().size.x / WIDTH, get_window().size.y / HEIGHT), 1)
 	$View.scale = Vector2(s, s)
 	$View.position = (get_window().size - Vector2i(WIDTH, HEIGHT) * s) / 2
-	$Background.size = get_window().size
+	$Border.size = get_window().size

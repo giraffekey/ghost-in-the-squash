@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://l4f1swy8hbmy"]
+[gd_scene load_steps=5 format=3 uid="uid://l4f1swy8hbmy"]
 
 [ext_resource type="Script" uid="uid://dc1dof5bh2mxp" path="res://scripts/root.gd" id="1_twpsu"]
 [ext_resource type="Script" uid="uid://nrkkfmh1dnbl" path="res://scripts/scene.gd" id="2_lrqlo"]
+[ext_resource type="Texture2D" uid="uid://7ic288uiuqlo" path="res://assets/sprites/border.jpg" id="2_sqa0i"]
 [ext_resource type="PackedScene" uid="uid://caj5tbh6rneoy" path="res://scenes/levels/1/1.tscn" id="2_twpsu"]
 
 [node name="Root" type="Control"]
@@ -13,11 +14,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_twpsu")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Border" type="TextureRect" parent="."]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-color = Color(0.18039216, 0.13333334, 0.18431373, 1)
+texture = ExtResource("2_sqa0i")
 
 [node name="View" type="SubViewportContainer" parent="."]
 layout_mode = 0
